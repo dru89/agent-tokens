@@ -10,8 +10,16 @@ Code, you'll get Claude Code data and nothing else.
 
 ## Quick start
 
+macOS / Linux:
+
 ```bash
 ./run.sh
+```
+
+Windows (PowerShell):
+
+```powershell
+.\run.ps1
 ```
 
 On the first run this creates a `.venv/`, installs matplotlib and pandas,
@@ -19,6 +27,14 @@ extracts token data from every supported agent it finds on the machine, and
 writes charts and a summary to `output/`.
 
 Run it again any time to refresh the numbers.
+
+If you'd rather manage your own environment:
+
+```bash
+pip install matplotlib pandas
+python3 extract.py -o output/usage.csv
+python3 chart.py -i output/usage.csv -o output/
+```
 
 ## What you get
 
@@ -53,13 +69,7 @@ exists.
 The OpenCode DB path respects `XDG_DATA_HOME` and checks the macOS
 `~/Library/Application Support/` fallback.
 
-`chart.py` reads the CSV and generates the charts and summary. You can run
-them independently:
-
-```bash
-python3 extract.py -o output/usage.csv
-python3 chart.py -i output/usage.csv -o output/
-```
+`chart.py` reads the CSV and generates the charts and summary.
 
 ## Token columns
 
@@ -76,7 +86,7 @@ Every row in the CSV has:
 ## Requirements
 
 - Python 3.10+
-- `matplotlib` and `pandas` (installed automatically by `run.sh`)
+- `matplotlib` and `pandas` (installed automatically by `run.sh` / `run.ps1`)
 - `sqlite3` Python module (included in standard CPython; the script warns if
   it's missing and you have OpenCode data)
 
