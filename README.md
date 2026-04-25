@@ -92,7 +92,38 @@ Every row in the CSV has:
 
 ## Adding a new agent
 
-Add a `parse_<name>` function to `extract.py` that writes rows to the CSV
-writer, and register it in the `PARSERS` list. The function should return 0
-if the agent's data directory doesn't exist. `chart.py` picks up new agents
-automatically.
+`extract.py` is designed to make this easy. Each agent is a single parser
+function registered in a `PARSERS` list. `chart.py` doesn't know or care
+which agents exist — it works with whatever shows up in the CSV.
+
+To add support for a new agent:
+
+1. Write a `parse_<name>(writer) -> int` function in `extract.py` that finds
+   the agent's local session data, extracts token counts, writes CSV rows,
+   and returns the row count (or 0 if the agent isn't installed).
+2. Add it to the `PARSERS` list at the bottom of the file.
+
+The full interface contract is documented in the comment block above
+`PARSERS` in `extract.py`.
+
+### Don't see your agent?
+
+If you use an agent that isn't supported yet, your agent can probably add
+itself. Most coding agents know where their own session history lives. Try
+giving your agent this prompt:
+
+> Read the file `extract.py` in this repo. It extracts per-request token
+> usage from AI coding agent session data and writes it to a CSV.
+>
+> I want to add support for **[your agent name]**. The parser interface is
+> documented in the comment block above the `PARSERS` list.
+>
+> Find where [your agent name] stores its session history on this machine.
+> Look for files or databases that contain per-request token usage (input
+> tokens, output tokens, cache read/write). Write a `parse_<name>` function
+> that follows the same patterns as the existing parsers, and register it in
+> `PARSERS`.
+>
+> If the agent doesn't record token usage locally, say so.
+
+If it works, PRs are welcome.
